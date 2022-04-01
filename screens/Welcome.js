@@ -1,12 +1,6 @@
 import React, { useState, useContext } from "react";
 import { StatusBar } from "expo-status-bar";
 
-//formik
-import { Formik } from "formik";
-
-//icons
-import { Octicons, Ionicons, Fontisto } from "@expo/vector-icons";
-
 import {
   InnerContainer,
   PageTitle,
@@ -26,42 +20,43 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 //credentials context
 import { CredentialsContext } from "../components/CredentialsContext";
 
-const Welcome = () => {
+const Welcome = ({ navigation, route }) => {
   //context
   const { storedCredentials, setStoredCredentials } =
     useContext(CredentialsContext);
-  const { name, email } = storedCredentials;
+  const { name, email, currentUserId } = storedCredentials;
 
   const clearLogin = () => {
     AsyncStorage.removeItem("currentUserCredentials")
       .then(() => {
         setStoredCredentials("");
+        navigation.navigate("Logout");
       })
       .catch((error) => console.log(error));
   };
 
+  //TODO
+  const scanQR = () => {};
   return (
-    <>
-      <StatusBar style="light" />
-      <InnerContainer>
-        <WelcomeImage
-          source={require("./../assets/img/brasov_welcome.jpg")}
-          resizeMode="contain"
-        />
+    <InnerContainer>
+      {/* <StatusBar style="light" /> */}
 
-        <WelcomeContainer>
-          <PageTitle welcome={true}>Bine ai venit!</PageTitle>
-          <SubTitle welcome={true}>{name || "Ion Ion"}</SubTitle>
-          <SubTitle welcome={true}>{email || "test@gmail.com"}</SubTitle>
-          <StyledFormArea>
-            <Line />
-            <StyledButton onPress={clearLogin}>
-              <ButtonText>Delogare</ButtonText>
-            </StyledButton>
-          </StyledFormArea>
-        </WelcomeContainer>
-      </InnerContainer>
-    </>
+      <WelcomeContainer>
+        <PageTitle welcome={true}>Bine ai venit!</PageTitle>
+        <SubTitle welcome={true}>{name || "Ion Ion"}</SubTitle>
+        <SubTitle welcome={true}>{email || "test@gmail.com"}</SubTitle>
+        <SubTitle welcome={true}>{currentUserId || "1"}</SubTitle>
+        <StyledFormArea>
+          <StyledButton onPress={scanQR}>
+            <ButtonText>Apasa pentru scanare</ButtonText>
+          </StyledButton>
+          <Line />
+          <StyledButton onPress={clearLogin}>
+            <ButtonText>Delogare</ButtonText>
+          </StyledButton>
+        </StyledFormArea>
+      </WelcomeContainer>
+    </InnerContainer>
   );
 };
 
