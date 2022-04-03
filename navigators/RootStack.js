@@ -16,6 +16,8 @@ import Entities from "./../screens/Entities";
 
 //credentials context
 import { CredentialsContext } from "../components/CredentialsContext";
+import Scanner from "../screens/Scanner";
+import Discount from "../screens/Discount";
 
 const Stack = createNativeStackNavigator();
 
@@ -40,7 +42,7 @@ const RootStack = () => {
                 paddingLeft: 20,
               },
             }}
-            initialRouteName="Delogare"
+            initialRouteName="Iesire din cont"
           >
             <>
               <Drawer.Screen
@@ -49,10 +51,16 @@ const RootStack = () => {
                 component={Welcome}
               />
               <Drawer.Screen
-                options={{ headerTintColor: brand }}
+                options={{
+                  headerTintColor: brand,
+                }}
                 name="Locatii participante"
-                text="Loc"
                 component={Entities}
+              />
+              <Drawer.Screen
+                options={{ headerTintColor: brand }}
+                name="Scanare"
+                component={Scanner}
               />
               <Drawer.Screen
                 //makes drawer invisible
@@ -60,8 +68,18 @@ const RootStack = () => {
                   headerShown: false,
                   swipeEdgeWidth: 0,
                 }}
-                name="Delogare"
+                name="Iesire din cont"
                 component={Login}
+              />
+              <Drawer.Screen
+                options={{
+                  headerTintColor: brand,
+                  drawerItemStyle: {
+                    display: "none",
+                  },
+                }}
+                name="Discount"
+                component={Discount}
               />
             </>
           </Drawer.Navigator>

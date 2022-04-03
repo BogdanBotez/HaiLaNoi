@@ -137,6 +137,8 @@ const Login = ({ navigation, route }) => {
   };
 
   //Verific daca exista user-ul in baza de date
+  //ToDo -- schimba in api-ul pt google dupa ce se sterge user-ul duplicat din db si schimba functia intr-una generica
+  // (adauga parametru de tip -- facebook/google/ios ca sa stii de unde vine)
   const setUserRegistered = async (currentUserEmail) => {
     console.log("2. isUserRegistered" + currentUserEmail);
     console.log("3. " + currentUserEmail);
@@ -152,7 +154,6 @@ const Login = ({ navigation, route }) => {
     } catch (err) {
       console.log("4. SetEmailCreatedFalse: " + err);
     }
-    console.log("5. emailCreated: ", isEmailCreated);
     return false;
   };
 

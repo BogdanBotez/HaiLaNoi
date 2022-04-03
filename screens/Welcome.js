@@ -36,7 +36,9 @@ const Welcome = ({ navigation, route }) => {
   };
 
   //TODO
-  const scanQR = () => {};
+  const scanQR = () => {
+    navigation.navigate("Scanare");
+  };
   return (
     <InnerContainer>
       {/* <StatusBar style="light" /> */}
@@ -51,9 +53,6 @@ const Welcome = ({ navigation, route }) => {
             <ButtonText>Apasa pentru scanare</ButtonText>
           </StyledButton>
           <Line />
-          <StyledButton onPress={clearLogin}>
-            <ButtonText>Delogare</ButtonText>
-          </StyledButton>
         </StyledFormArea>
       </WelcomeContainer>
     </InnerContainer>
