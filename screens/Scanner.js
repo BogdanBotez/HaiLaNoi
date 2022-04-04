@@ -49,7 +49,7 @@ const Scanner = ({ navigation, route }) => {
         // The "No" button
         // Does nothing but dismiss the dialog when tapped
         {
-          text: "No",
+          text: "Nu",
         },
       ]
     );

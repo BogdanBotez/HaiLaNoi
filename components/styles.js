@@ -17,6 +17,8 @@ const StatusBarHeight = StatusBar.currentHeight;
 
 //colors
 export const Colors = {
+  //culoare pt logo-ul bun
+  //primary: "#f5ebea",
   primary: "#ffffff",
   secondary: "#E5E7EB",
   tertiary: "#1F2937",
@@ -24,9 +26,11 @@ export const Colors = {
   brand: "#FFA500",
   green: "#10B981",
   red: "#EF4444",
+  black: "#000000",
 };
 
-const { primary, secondary, tertiary, darkLight, brand, green, red } = Colors;
+const { primary, secondary, tertiary, darkLight, brand, green, red, black } =
+  Colors;
 
 export const StyledContainer = styled.View`
   flex: 1;
@@ -59,13 +63,15 @@ export const Avatar = styled.Image`
 `;
 
 export const WelcomeImage = styled.Image`
-  height: 50%;
-  min-width: 100%;
+  flex: 1;
+  height: 20px;
+  width: 20px;
 `;
 
 export const PageLogo = styled.Image`
-    width: 150px;
-    height 100px;
+  width: 60%;
+  margin-top: 30px;
+  margin-top: 30px;
 `;
 
 export const PageTitle = styled.Text`

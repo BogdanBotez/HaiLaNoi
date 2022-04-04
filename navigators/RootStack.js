@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Colors } from "./../components/styles";
-const { primary, tertiary, brand } = Colors;
+const { primary, tertiary, brand, black } = Colors;
 
 //React navigation
 import { NavigationContainer } from "@react-navigation/native";
@@ -18,6 +18,7 @@ import Entities from "./../screens/Entities";
 import { CredentialsContext } from "../components/CredentialsContext";
 import Scanner from "../screens/Scanner";
 import Discount from "../screens/Discount";
+import Transactions from "../screens/Transactions";
 
 const Stack = createNativeStackNavigator();
 
@@ -34,7 +35,7 @@ const RootStack = () => {
               headerStyled: {
                 backgroundColor: tertiary,
               },
-              leftButtonIconStyle: { tintColor: brand },
+              leftButtonIconStyle: { tintColor: black },
               //headerTintColor: tertiary,
               headerTransparent: true,
               headerTitle: "",
@@ -46,21 +47,31 @@ const RootStack = () => {
           >
             <>
               <Drawer.Screen
-                options={{ headerTintColor: brand }}
+                options={{ headerTintColor: black }}
                 name="Acasa"
                 component={Welcome}
               />
               <Drawer.Screen
                 options={{
-                  headerTintColor: brand,
+                  headerTintColor: black,
                 }}
                 name="Locatii participante"
                 component={Entities}
               />
               <Drawer.Screen
-                options={{ headerTintColor: brand }}
+                options={{
+                  headerTintColor: black,
+                  drawerItemStyle: {
+                    display: "none",
+                  },
+                }}
                 name="Scanare"
                 component={Scanner}
+              />
+              <Drawer.Screen
+                options={{ headerTintColor: black }}
+                name="Istoric utilizator"
+                component={Transactions}
               />
               <Drawer.Screen
                 //makes drawer invisible
@@ -73,7 +84,7 @@ const RootStack = () => {
               />
               <Drawer.Screen
                 options={{
-                  headerTintColor: brand,
+                  headerTintColor: black,
                   drawerItemStyle: {
                     display: "none",
                   },

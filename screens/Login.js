@@ -6,7 +6,7 @@ import { Formik } from "formik";
 
 //icons
 import { Octicons, Ionicons, Fontisto } from "@expo/vector-icons";
-import { BackHandler } from "react-native";
+import { BackHandler, Image, StyleSheet } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 
 import {
@@ -29,6 +29,7 @@ import {
   ExtraText,
   TextLinkContent,
   TextLink,
+  WelcomeImage,
 } from "./../components/styles";
 
 import { View, ActivityIndicator } from "react-native";
@@ -137,15 +138,15 @@ const Login = ({ navigation, route }) => {
   };
 
   //Verific daca exista user-ul in baza de date
-  //ToDo -- schimba in api-ul pt google dupa ce se sterge user-ul duplicat din db si schimba functia intr-una generica
+  //ToDo -- schimba functia intr-una generica
   // (adauga parametru de tip -- facebook/google/ios ca sa stii de unde vine)
   const setUserRegistered = async (currentUserEmail) => {
     console.log("2. isUserRegistered" + currentUserEmail);
     console.log("3. " + currentUserEmail);
     try {
       const resp = await axios.get(
-        "http://cm2020.unitbv.ro/Turism4/api/Utilizators/GetUtilizatorByEmail",
-        { params: { email: currentUserEmail } }
+        "http://cm2020.unitbv.ro/Turism4/api/Utilizators/GetUtilizatorByGoogle",
+        { params: { googleid: currentUserEmail } }
       );
       setCurrentUserId(resp);
       console.log(currentUserId);
@@ -189,7 +190,6 @@ const Login = ({ navigation, route }) => {
             source={require("./../assets/img/logo.png")}
             resizeMode="contain"
           />
-
           <PageTitle>HaiLaNoi</PageTitle>
           <SubTitle>Autentificare</SubTitle>
 
@@ -206,7 +206,7 @@ const Login = ({ navigation, route }) => {
               <ActivityIndicator size="large" color={primary} />
             </StyledButton>
           )}
-          <StyledButton
+          {/* <StyledButton
             facebook={true}
             onPress={
               () => {}
@@ -215,7 +215,7 @@ const Login = ({ navigation, route }) => {
           >
             <Fontisto name="facebook" color={"white"} size={25} />
             <ButtonText> Login prin Facebook</ButtonText>
-          </StyledButton>
+          </StyledButton> */}
         </InnerContainer>
       </StyledContainer>
     </KeyboardAvoidingWrapper>
@@ -223,3 +223,14 @@ const Login = ({ navigation, route }) => {
 };
 
 export default Login;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    width: undefined,
+    height: undefined,
+    backgroundColor: "transparent",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});

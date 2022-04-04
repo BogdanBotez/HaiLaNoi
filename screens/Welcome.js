@@ -19,6 +19,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 //credentials context
 import { CredentialsContext } from "../components/CredentialsContext";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const Welcome = ({ navigation, route }) => {
   //context
@@ -40,22 +41,15 @@ const Welcome = ({ navigation, route }) => {
     navigation.navigate("Scanare");
   };
   return (
-    <InnerContainer>
-      {/* <StatusBar style="light" /> */}
-
-      <WelcomeContainer>
-        <PageTitle welcome={true}>Bine ai venit!</PageTitle>
-        <SubTitle welcome={true}>{name || "Ion Ion"}</SubTitle>
-        <SubTitle welcome={true}>{email || "test@gmail.com"}</SubTitle>
-        <SubTitle welcome={true}>{currentUserId || "1"}</SubTitle>
-        <StyledFormArea>
-          <StyledButton onPress={scanQR}>
-            <ButtonText>Apasa pentru scanare</ButtonText>
-          </StyledButton>
-          <Line />
-        </StyledFormArea>
-      </WelcomeContainer>
-    </InnerContainer>
+    <WelcomeContainer>
+      <PageTitle welcome={true}>Bine ai venit!</PageTitle>
+      <SubTitle welcome={true}>{name || "Ion Ion"}</SubTitle>
+      {/* <SubTitle welcome={true}>{email || "test@gmail.com"}</SubTitle> */}
+      {/* <SubTitle welcome={true}>{currentUserId || "1"}</SubTitle> */}
+      <StyledButton onPress={scanQR}>
+        <ButtonText>Apasa pentru scanare</ButtonText>
+      </StyledButton>
+    </WelcomeContainer>
   );
 };
 

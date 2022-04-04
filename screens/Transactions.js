@@ -5,8 +5,8 @@ import { ListItem } from "react-native-elements";
 
 import axios from "axios";
 
-const getEntitiesAPI =
-  "http://cm2020.unitbv.ro/Turism4/api/Entities/GetEntities";
+const getTransactionsByUserIDAPI =
+  "http://cm2020.unitbv.ro/Turism4/api/Tranzacties/TranzactiiListByUtilizator";
 
 //async-storage
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -15,38 +15,56 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { CredentialsContext } from "../components/CredentialsContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Container } from "native-base";
+import { InnerContainer, StyledContainer } from "../components/styles";
 
-const Entities = ({ navigation, route }) => {
-  const [entities, setEntities] = useState("");
+const Transactions = ({ navigation, route }) => {
+  const [transactions, setTransactions] = useState("");
 
-  useEffect(() => {
-    getAllEntities();
-  }, []);
-
-  //context
   const { storedCredentials, setStoredCredentials } =
     useContext(CredentialsContext);
   const { name, email, currentUserId } = storedCredentials;
 
-  const getAllEntities = async () => {
+  useEffect(() => {
+    getAllTransactionsByUserID();
+  }, []);
+
+  const getAllTransactionsByUserID = async () => {
     try {
-      const resp = await axios.get(getEntitiesAPI);
-      console.log(entities);
-      setEntities(resp.data);
-      console.log(entities);
+      const resp = await axios.get(getTransactionsByUserIDAPI, {
+        params: { ID_Utilizator: currentUserId },
+      });
+      console.log(resp.data);
+      setTransactions(resp.data);
+      console.log(transactions);
     } catch (err) {
       console.log(err);
     }
+  };
+
+  const getDateSubstring = (fullDate) => {
+    var date = fullDate.substring(0, 10);
+    return date;
+  };
+
+  const getTimeSubstring = (fullDate) => {
+    var date = fullDate.substring(11, 16);
+    return date;
   };
 
   return (
     <View style={styles.container}>
       <FlatList
         itemSeparatorComponent={() => <View style={styles.separator} />}
-        data={entities}
+        data={transactions}
         keyExtractor={(item, index) => index.toString()}
         renderItem={
-          ({ item }) => <Text style={styles.item}>{item.ENTITY_NAME}</Text>
+          ({ item }) => (
+            <Text style={styles.item}>
+              Locatia: {item.ENTITY_NAME + ", "}
+              Data: {getDateSubstring(item.DataOra.toString())}, Ora:{" "}
+              {getTimeSubstring(item.DataOra.toString())}
+            </Text>
+          )
           // return (
           //   <ListItem
           //     title={item.ENTITY_NAME}
@@ -66,7 +84,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingTop: 50,
-    paddingBottom: 20,
     backgroundColor: "#ffffff",
   },
   separator: {
@@ -74,14 +91,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#CED0CE",
   },
   item: {
-    textAlign: "center",
     marginTop: 20,
     padding: 20,
-    marginHorizontal: 20,
     paddingHorizontal: 20,
     backgroundColor: "#FFA500",
-    fontSize: 20,
+    fontSize: 15,
   },
 });
 
-export default Entities;
+export default Transactions;
