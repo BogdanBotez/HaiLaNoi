@@ -13,8 +13,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 //credentials context
 import { CredentialsContext } from "../components/CredentialsContext";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Container } from "native-base";
+
+import { StyledContainer } from "./../components/styles";
 
 const Entities = ({ navigation, route }) => {
   const [entities, setEntities] = useState("");
@@ -40,23 +40,25 @@ const Entities = ({ navigation, route }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <FlatList
-        itemSeparatorComponent={() => <View style={styles.separator} />}
-        data={entities}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={
-          ({ item }) => <Text style={styles.item}>{item.ENTITY_NAME}</Text>
-          // return (
-          //   <ListItem
-          //     title={item.ENTITY_NAME}
-          //     //title={"${item.ENTITY_NAME} (${item.RatingCurent})"}
-          //     // onPress={() => {}}
-          //   />
-          // );
-        }
-      />
-    </View>
+    <StyledContainer>
+      <View style={styles.container}>
+        <FlatList
+          itemSeparatorComponent={() => <View style={styles.separator} />}
+          data={entities}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={
+            ({ item }) => <Text style={styles.item}>{item.ENTITY_NAME}</Text>
+            // return (
+            //   <ListItem
+            //     title={item.ENTITY_NAME}
+            //     //title={"${item.ENTITY_NAME} (${item.RatingCurent})"}
+            //     // onPress={() => {}}
+            //   />
+            // );
+          }
+        />
+      </View>
+    </StyledContainer>
   );
 };
 

@@ -1,7 +1,12 @@
 import React, { useState, useContext, useEffect, Component } from "react";
 
-import { StyleSheet, View, FlatList, Text } from "react-native";
-import { ListItem } from "react-native-elements";
+import {
+  StyleSheet,
+  View,
+  FlatList,
+  Text,
+  ActivityIndicator,
+} from "react-native";
 
 import axios from "axios";
 
@@ -26,7 +31,7 @@ const Transactions = ({ navigation, route }) => {
 
   useEffect(() => {
     getAllTransactionsByUserID();
-  }, []);
+  }, useState([]));
 
   const getAllTransactionsByUserID = async () => {
     try {
@@ -52,29 +57,50 @@ const Transactions = ({ navigation, route }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <FlatList
-        itemSeparatorComponent={() => <View style={styles.separator} />}
-        data={transactions}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={
-          ({ item }) => (
-            <Text style={styles.item}>
-              Locatia: {item.ENTITY_NAME + ", "}
-              Data: {getDateSubstring(item.DataOra.toString())}, Ora:{" "}
-              {getTimeSubstring(item.DataOra.toString())}
-            </Text>
-          )
-          // return (
-          //   <ListItem
-          //     title={item.ENTITY_NAME}
-          //     //title={"${item.ENTITY_NAME} (${item.RatingCurent})"}
-          //     // onPress={() => {}}
-          //   />
-          // );
-        }
-      />
-    </View>
+    <StyledContainer>
+      <View style={styles.container}>
+        {transactions ? (
+          <FlatList
+            itemSeparatorComponent={() => <View style={styles.separator} />}
+            data={transactions}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item }) => (
+              <Text style={styles.item}>
+                Locatia: {item.ENTITY_NAME + ", "}
+                Data: {getDateSubstring(item.DataOra.toString())}, Ora:{" "}
+                {getTimeSubstring(item.DataOra.toString())}
+              </Text>
+            )}
+          />
+        ) : (
+          <ActivityIndicator size="large" />
+        )}
+      </View>
+    </StyledContainer>
+
+    // <View style={styles.container}>
+    //   <FlatList
+    //     itemSeparatorComponent={() => <View style={styles.separator} />}
+    //     data={transactions}
+    //     keyExtractor={(item, index) => index.toString()}
+    //     renderItem={
+    //       ({ item }) => (
+    //         <Text style={styles.item}>
+    //           Locatia: {item.ENTITY_NAME + ", "}
+    //           Data: {getDateSubstring(item.DataOra.toString())}, Ora:{" "}
+    //           {getTimeSubstring(item.DataOra.toString())}
+    //         </Text>
+    //       )
+    //       // return (
+    //       //   <ListItem
+    //       //     title={item.ENTITY_NAME}
+    //       //     //title={"${item.ENTITY_NAME} (${item.RatingCurent})"}
+    //       //     // onPress={() => {}}
+    //       //   />
+    //       // );
+    //     }
+    //   />
+    // </View>
   );
 };
 

@@ -70,8 +70,6 @@ export const WelcomeImage = styled.Image`
 
 export const PageLogo = styled.Image`
   width: 60%;
-  margin-top: 30px;
-  margin-top: 30px;
 `;
 
 export const PageTitle = styled.Text`

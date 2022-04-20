@@ -2,6 +2,7 @@ import React, { useState, useContext } from "react";
 import { StatusBar } from "expo-status-bar";
 
 import {
+  StyledContainer,
   InnerContainer,
   PageTitle,
   SubTitle,
@@ -41,15 +42,17 @@ const Welcome = ({ navigation, route }) => {
     navigation.navigate("Scanare");
   };
   return (
-    <WelcomeContainer>
-      <PageTitle welcome={true}>Bine ai venit!</PageTitle>
-      <SubTitle welcome={true}>{name || "Ion Ion"}</SubTitle>
-      {/* <SubTitle welcome={true}>{email || "test@gmail.com"}</SubTitle> */}
-      {/* <SubTitle welcome={true}>{currentUserId || "1"}</SubTitle> */}
-      <StyledButton onPress={scanQR}>
-        <ButtonText>Apasa pentru scanare</ButtonText>
-      </StyledButton>
-    </WelcomeContainer>
+    <StyledContainer>
+      <WelcomeContainer>
+        <PageTitle welcome={true}>Bine ai venit!</PageTitle>
+        <SubTitle welcome={true}>{name || "Ion Ion"}</SubTitle>
+        {/* <SubTitle welcome={true}>{email || "test@gmail.com"}</SubTitle> */}
+        {/* <SubTitle welcome={true}>{currentUserId || "1"}</SubTitle> */}
+        <StyledButton onPress={scanQR}>
+          <ButtonText>Apasa pentru scanare</ButtonText>
+        </StyledButton>
+      </WelcomeContainer>
+    </StyledContainer>
   );
 };
 

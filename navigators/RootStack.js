@@ -13,12 +13,13 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import Login from "./../screens/Login";
 import Welcome from "./../screens/Welcome";
 import Entities from "./../screens/Entities";
-
-//credentials context
-import { CredentialsContext } from "../components/CredentialsContext";
 import Scanner from "../screens/Scanner";
 import Discount from "../screens/Discount";
 import Transactions from "../screens/Transactions";
+import Review from "../screens/Review";
+
+//credentials context
+import { CredentialsContext } from "../components/CredentialsContext";
 
 const Stack = createNativeStackNavigator();
 
@@ -91,6 +92,16 @@ const RootStack = () => {
                 }}
                 name="Discount"
                 component={Discount}
+              />
+              <Drawer.Screen
+                options={{
+                  headerTintColor: black,
+                  drawerItemStyle: {
+                    display: "none",
+                  },
+                }}
+                name="Review"
+                component={Review}
               />
             </>
           </Drawer.Navigator>

@@ -2,6 +2,8 @@ import React, { useState, useEffect, useContext } from "react";
 import { Text, View, StyleSheet, Button } from "react-native";
 
 import {
+  StyledContainer,
+  InnerContainer,
   WelcomeContainer,
   PageLogo,
   PageTitle,
@@ -30,10 +32,23 @@ const Discount = ({ navigation, route }) => {
   const { name, email, currentUserId } = storedCredentials;
 
   useEffect(() => {
-    var date = new Date();
+    var date = convertUTCDateToLocalDate(new Date());
     postTransaction(date);
     console.log(date);
   }, []);
+
+  function convertUTCDateToLocalDate(date) {
+    var newDate = new Date(
+      date.getTime() + date.getTimezoneOffset() * 60 * 1000
+    );
+
+    var offset = date.getTimezoneOffset() / 60;
+    var hours = date.getHours();
+
+    newDate.setHours(hours - offset);
+
+    return newDate;
+  }
 
   const postTransaction = async (date) => {
     try {
@@ -50,17 +65,30 @@ const Discount = ({ navigation, route }) => {
     }
   };
 
+  const redirectReview = () => {
+    navigation.navigate("Review", {
+      locationID: locationID,
+    });
+  };
+
   return (
-    <WelcomeContainer>
-      <PageTitle welcome={true}>Felicitari!</PageTitle>
-      <SubTitle welcome={true}>
-        {"In baza acestui mesaj poti primi un discount de 10% pentru urmatoarea locatie: " +
-          locationName}
-      </SubTitle>
-      <SubTitle welcome={true}>
-        Pentru a beneficia de discount, arata-i acest mesaj unui ospatar.
-      </SubTitle>
-    </WelcomeContainer>
+    <StyledContainer>
+      <InnerContainer>
+        <WelcomeContainer>
+          <PageTitle welcome={true}>Felicitari!</PageTitle>
+          <SubTitle welcome={true}>
+            {"In baza acestui mesaj poti primi un discount de 10% pentru urmatoarea locatie: " +
+              locationName}
+          </SubTitle>
+          <SubTitle welcome={true}>
+            Pentru a beneficia de discount, arata-i acest mesaj unui ospatar.
+          </SubTitle>
+        </WelcomeContainer>
+        <StyledButton onPress={() => redirectReview()}>
+          <ButtonText>Adauga un review</ButtonText>
+        </StyledButton>
+      </InnerContainer>
+    </StyledContainer>
   );
 };
 const styles = StyleSheet.create({

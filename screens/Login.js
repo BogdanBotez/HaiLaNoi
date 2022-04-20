@@ -50,6 +50,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 //credentials context
 import { CredentialsContext } from "../components/CredentialsContext";
 
+//Endpoints
+const postUserAPI =
+  "http://cm2020.unitbv.ro/Turism4/api/Utilizators/PostUtilizator";
+const getUserByGoogleAPI =
+  "http://cm2020.unitbv.ro/Turism4/api/Utilizators/GetUtilizatorByGoogle";
+
 //Todo
 const Login = ({ navigation, route }) => {
   const [hidePassword, setHidePassword] = useState(true);
@@ -103,13 +109,11 @@ const Login = ({ navigation, route }) => {
     Google.logInAsync(config)
       .then(async (result) => {
         const { type, user } = result;
-        console.log(
-          "1. Data from api call HandleGoogleSignIN : " + result.data
-        );
+        console.log("1. Result api call HandleGoogleSignIN : " + type);
         if (type == "success") {
           const { email, name } = user;
           //Daca user-ul este in Baza de date, se trece peste formular
-          let isEmailRegistered = await setUserRegistered(email);
+          let isEmailRegistered = await setUserRegistered(email, name);
           console.log("isEmailRegistered: " + isEmailRegistered);
           if (isEmailRegistered) {
             persistLogin({ email, name, currentUserId }, message, "SUCCESS");
@@ -140,22 +144,54 @@ const Login = ({ navigation, route }) => {
   //Verific daca exista user-ul in baza de date
   //ToDo -- schimba functia intr-una generica
   // (adauga parametru de tip -- facebook/google/ios ca sa stii de unde vine)
-  const setUserRegistered = async (currentUserEmail) => {
-    console.log("2. isUserRegistered" + currentUserEmail);
-    console.log("3. " + currentUserEmail);
+  const setUserRegistered = async (email, name) => {
+    console.log("2. isUserRegistered" + email);
+    console.log("3. " + email);
     try {
-      const resp = await axios.get(
-        "http://cm2020.unitbv.ro/Turism4/api/Utilizators/GetUtilizatorByGoogle",
-        { params: { googleid: currentUserEmail } }
-      );
+      const resp = await axios.get(getUserByGoogleAPI, {
+        params: { googleid: email },
+      });
       setCurrentUserId(resp);
-      console.log(currentUserId);
+      console.log(resp.status);
+      console.log("Current user id: " + currentUserId);
       console.log("4. SetEmailCreatedTrue: ");
       return true;
     } catch (err) {
-      console.log("4. SetEmailCreatedFalse: " + err);
+      //Daca nu exista contul in db => formular (pending state) + post user
+      if (err.toString() === "Error: Request failed with status code 404") {
+        console.log("Cont inexistent in db");
+        console.log(name);
+        postNewUser(email, name);
+      } else {
+        console.log("4. SetEmailCreatedFalse: " + err);
+      }
     }
     return false;
+  };
+
+  const postNewUser = async (email, name) => {
+    try {
+      const resp = await axios.post(postUserAPI, {
+        userLoginGoogle: email,
+        userLoginIOS: "",
+        userEmail: "",
+        userLoginFacebook: "",
+        ID_Utilizator: 1,
+        ProfilUtilizator: "",
+      });
+      console.log(resp.data.ID_Utilizator);
+      setCurrentUserId(resp);
+      console.log(currentUserId);
+      console.log(
+        "New user id: " +
+          resp.data.ID_Utilizator.toString() +
+          "CurrentuserID" +
+          currentUserId
+      );
+      persistLogin({ email, name, currentUserId }, message, "SUCCESS");
+    } catch (err) {
+      console.log("Post new user: " + err);
+    }
   };
 
   const setCurrentUserId = (resp) => {
