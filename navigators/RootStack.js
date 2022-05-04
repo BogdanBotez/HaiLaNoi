@@ -17,6 +17,8 @@ import Scanner from "../screens/Scanner";
 import Discount from "../screens/Discount";
 import Transactions from "../screens/Transactions";
 import Review from "../screens/Review";
+import Survey from "../screens/Survey";
+import Questionnaire from "../screens/Questionnaire";
 
 //credentials context
 import { CredentialsContext } from "../components/CredentialsContext";
@@ -102,6 +104,16 @@ const RootStack = () => {
                 }}
                 name="Review"
                 component={Review}
+              />
+              <Drawer.Screen
+                options={{
+                  headerTintColor: black,
+                  drawerItemStyle: {
+                    display: "none",
+                  },
+                }}
+                name="Questionnaire"
+                component={Questionnaire}
               />
             </>
           </Drawer.Navigator>

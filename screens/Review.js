@@ -1,5 +1,5 @@
 import { Rating } from "react-native-ratings";
-import { View, StyleSheet, TextInput, Alert } from "react-native";
+import { View, StyleSheet, TextInput, Alert, Image } from "react-native";
 import React, { useState, useContext, useEffect, Component } from "react";
 
 import {
@@ -25,6 +25,7 @@ import {
 //credentials context
 import { CredentialsContext } from "../components/CredentialsContext";
 import axios from "axios";
+import * as ImagePicker from "expo-image-picker";
 
 const Review = ({ navigation, route }) => {
   const [textInput, setTextInput] = useState(null);
@@ -33,6 +34,7 @@ const Review = ({ navigation, route }) => {
   const { storedCredentials, setStoredCredentials } =
     useContext(CredentialsContext);
   const { name, email, currentUserId } = storedCredentials;
+  const [pickedImagePath, setPickedImagePath] = useState("");
 
   const setEntityRating = (rating) => {
     setRatingInput(rating);
@@ -114,10 +116,56 @@ const Review = ({ navigation, route }) => {
     ]);
   };
 
+  const openGallery = async () => {
+    // Ask the user for the permission to access the media library
+    const permissionResult =
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      alert("You've refused to allow this appp to access your photos!");
+      return;
+    }
+
+    let result = await ImagePicker.launchImageLibraryAsync();
+
+    // Explore the result
+    console.log(result);
+
+    if (!result.cancelled) {
+      setPickedImagePath(result.uri);
+      console.log(result.uri);
+    }
+  };
+
+  const openCamera = async () => {
+    // Ask the user for the permission to access the camera
+    const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      alert("You've refused to allow this appp to access your camera!");
+      return;
+    }
+
+    console.log("launchCameraAsync");
+    let result = await ImagePicker.launchCameraAsync();
+
+    console.log("Result: ");
+    // Explore the result
+    console.log(result);
+
+    if (!result.cancelled) {
+      setPickedImagePath(result.uri);
+      console.log("Result.uri: " + result.uri);
+      //console.log(result.uri);
+    }
+  };
+
   return (
     <StyledContainer>
       <Rating
+        minValue={1}
         showRating
+        defaultRating={3}
         onFinishRating={setEntityRating}
         style={{ paddingVertical: 10 }}
       />
@@ -137,6 +185,25 @@ const Review = ({ navigation, route }) => {
       <StyledButton onPress={() => postReview()}>
         <ButtonText>Adauga Recenzie</ButtonText>
       </StyledButton>
+
+      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+        <StyledButton onPress={() => openCamera()}>
+          <ButtonText>Camera</ButtonText>
+        </StyledButton>
+        <Text>
+          Pentru ca validarea sa fie completa, va rugam sa adaugati o poza cu
+          bonul.
+        </Text>
+        <StyledButton onPress={() => openGallery()}>
+          <ButtonText>Galerie</ButtonText>
+        </StyledButton>
+      </View>
+
+      <View style={styles.imageContainer}>
+        {pickedImagePath !== "" && (
+          <Image source={{ uri: pickedImagePath }} style={styles.image} />
+        )}
+      </View>
     </StyledContainer>
   );
 };
@@ -152,6 +219,24 @@ const styles = StyleSheet.create({
     height: 100,
     justifyContent: "flex-start",
     textAlignVertical: "top",
+  },
+  screen: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  buttonContainer: {
+    width: 400,
+    flexDirection: "row",
+    justifyContent: "space-around",
+  },
+  imageContainer: {
+    padding: 30,
+  },
+  image: {
+    width: 200,
+    height: 150,
+    resizeMode: "contain",
   },
 });
 

@@ -34,7 +34,7 @@ const Discount = ({ navigation, route }) => {
   useEffect(() => {
     var date = convertUTCDateToLocalDate(new Date());
     postTransaction(date);
-    console.log(date);
+    console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Test date: " + date);
   }, []);
 
   function convertUTCDateToLocalDate(date) {

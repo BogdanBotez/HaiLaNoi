@@ -242,16 +242,18 @@ const Login = ({ navigation, route }) => {
               <ActivityIndicator size="large" color={primary} />
             </StyledButton>
           )}
-          {/* <StyledButton
+          <StyledButton
             facebook={true}
             onPress={
-              () => {}
-              // navigation.navigate("Login")
+              () => {
+                navigation.navigate("Questionnaire");
+              }
+              //
             }
           >
             <Fontisto name="facebook" color={"white"} size={25} />
             <ButtonText> Login prin Facebook</ButtonText>
-          </StyledButton> */}
+          </StyledButton>
         </InnerContainer>
       </StyledContainer>
     </KeyboardAvoidingWrapper>

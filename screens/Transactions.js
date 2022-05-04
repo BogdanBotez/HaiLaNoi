@@ -1,4 +1,10 @@
-import React, { useState, useContext, useEffect, Component } from "react";
+import React, {
+  useState,
+  useContext,
+  useEffect,
+  Component,
+  useRef,
+} from "react";
 
 import {
   StyleSheet,
@@ -29,18 +35,18 @@ const Transactions = ({ navigation, route }) => {
     useContext(CredentialsContext);
   const { name, email, currentUserId } = storedCredentials;
 
+  const firstRenderRef = useRef(false);
+
   useEffect(() => {
     getAllTransactionsByUserID();
-  }, useState([]));
+  }); // am incercat si cu [transactions] dar intra (cum e de asteptat)  in loop infinit
 
   const getAllTransactionsByUserID = async () => {
     try {
       const resp = await axios.get(getTransactionsByUserIDAPI, {
         params: { ID_Utilizator: currentUserId },
       });
-      console.log(resp.data);
       setTransactions(resp.data);
-      console.log(transactions);
     } catch (err) {
       console.log(err);
     }
@@ -77,30 +83,6 @@ const Transactions = ({ navigation, route }) => {
         )}
       </View>
     </StyledContainer>
-
-    // <View style={styles.container}>
-    //   <FlatList
-    //     itemSeparatorComponent={() => <View style={styles.separator} />}
-    //     data={transactions}
-    //     keyExtractor={(item, index) => index.toString()}
-    //     renderItem={
-    //       ({ item }) => (
-    //         <Text style={styles.item}>
-    //           Locatia: {item.ENTITY_NAME + ", "}
-    //           Data: {getDateSubstring(item.DataOra.toString())}, Ora:{" "}
-    //           {getTimeSubstring(item.DataOra.toString())}
-    //         </Text>
-    //       )
-    //       // return (
-    //       //   <ListItem
-    //       //     title={item.ENTITY_NAME}
-    //       //     //title={"${item.ENTITY_NAME} (${item.RatingCurent})"}
-    //       //     // onPress={() => {}}
-    //       //   />
-    //       // );
-    //     }
-    //   />
-    // </View>
   );
 };
 
