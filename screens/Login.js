@@ -6,7 +6,7 @@ import { Formik } from "formik";
 
 //icons
 import { Octicons, Ionicons, Fontisto } from "@expo/vector-icons";
-import { BackHandler, Image, StyleSheet } from "react-native";
+import { BackHandler, Image, StyleSheet, Alert } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 
 import {
@@ -58,7 +58,6 @@ const getUserByGoogleAPI =
 
 //Todo
 const Login = ({ navigation, route }) => {
-  const [hidePassword, setHidePassword] = useState(true);
   const [message, setMessage] = useState();
   const [messageType, setMessageType] = useState();
   const [googleSubmitting, setGoogleSubmitting] = useState(false);
@@ -146,7 +145,6 @@ const Login = ({ navigation, route }) => {
   // (adauga parametru de tip -- facebook/google/ios ca sa stii de unde vine)
   const setUserRegistered = async (email, name) => {
     console.log("2. isUserRegistered" + email);
-    console.log("3. " + email);
     try {
       const resp = await axios.get(getUserByGoogleAPI, {
         params: { googleid: email },
@@ -157,11 +155,13 @@ const Login = ({ navigation, route }) => {
       console.log("4. SetEmailCreatedTrue: ");
       return true;
     } catch (err) {
-      //Daca nu exista contul in db => formular (pending state) + post user
-      if (err.toString() === "Error: Request failed with status code 404") {
+      //Daca nu exista contul in db => formular + daca completeaza formularul se intoarce in Login screen
+      if (err.toString() == "Error: Request failed with status code 404") {
         console.log("Cont inexistent in db");
         console.log(name);
-        postNewUser(email, name);
+        // param dupa ce functioneaza si fb
+        showQuestionnaireDialog("google", email);
+        //postNewUser(email, name);
       } else {
         console.log("4. SetEmailCreatedFalse: " + err);
       }
@@ -192,6 +192,38 @@ const Login = ({ navigation, route }) => {
     } catch (err) {
       console.log("Post new user: " + err);
     }
+  };
+
+  const showQuestionnaireDialog = (loginPlatform, email) => {
+    return Alert.alert(
+      "Cont inexistent / Invalid account",
+      "Pentru crearea contului trebuie sa completati un formular. Selectati limba dorita./ Account registration requires completing a short questionnaire. Select the language.",
+      [
+        // The "Yes" button
+        {
+          text: "RO",
+          onPress: () => {
+            navigation.navigate("Questionnaire", {
+              loginType: loginPlatform,
+              language: "RO",
+              email: email,
+            });
+          },
+        },
+        // The "No" button
+        // Does nothing but dismiss the dialog when tapped
+        {
+          text: "EN",
+          onPress: () => {
+            navigation.navigate("Questionnaire", {
+              loginType: loginPlatform,
+              language: "EN",
+              email: email,
+            });
+          },
+        },
+      ]
+    );
   };
 
   const setCurrentUserId = (resp) => {
@@ -242,7 +274,7 @@ const Login = ({ navigation, route }) => {
               <ActivityIndicator size="large" color={primary} />
             </StyledButton>
           )}
-          <StyledButton
+          {/* <StyledButton
             facebook={true}
             onPress={
               () => {
@@ -253,7 +285,7 @@ const Login = ({ navigation, route }) => {
           >
             <Fontisto name="facebook" color={"white"} size={25} />
             <ButtonText> Login prin Facebook</ButtonText>
-          </StyledButton>
+          </StyledButton> */}
         </InnerContainer>
       </StyledContainer>
     </KeyboardAvoidingWrapper>

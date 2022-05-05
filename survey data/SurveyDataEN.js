@@ -1,51 +1,43 @@
 export default dataEN = [
   {
-    EN1: "Which is your country of origin?",
+    Question: "Which is your country of origin?",
     Answers: {
-      country: "'NextQ' for country in Countries",
+      value: ["England", "Turkey", "Scotland"],
     },
     Property: "Country",
   },
   {
-    EN2: "What is your age?",
+    Question: "What is your age?",
     Answers: {
-      "Under 19 years old": "NextQ",
-      "19 - 25 years old": "NextQ",
-      "25 - 40 years old": "NextQ",
-      "40 - 65 years old": "NextQ",
-      "Over 65 years old": "NextQ",
+      value: [
+        "Under 19 years old",
+        "19 - 25 years old",
+        "25 - 40 years old",
+        "40 - 65 years old",
+        "Over 65 years old",
+      ],
     },
     Property: "AgeGroup",
   },
 
   {
-    EN3: "What is the purpose of your visit in Brașov?",
+    Question: "What is the purpose of your visit in Brașov?",
     Answers: {
-      Business: "NextQ",
-      Vacation: "NextQ",
-      Other: "NextQ",
+      value: ["Business", "Vacation", "Other"],
     },
     Property: "Motivation",
   },
   {
-    EN4: "How many nights will you stay in Brașov?",
+    Question: "How many nights will you stay in Brașov?",
     Answers: {
-      0: "NextQ",
-      1: "NextQ",
-      2: "NextQ",
-      3: "NextQ",
-      4: "NextQ",
-      5: "NextQ",
+      value: ["0", "1", "2", "3", "4", "5"],
     },
     Property: "NightsSpent",
   },
   {
-    EN5: "How often do you dine out?",
+    Question: "How often do you dine out?",
     Answers: {
-      Never: "Submit",
-      "Once a month": "Submit",
-      "Once e week": "Submit",
-      Daily: "Submit",
+      value: ["Never", "Once a month", "Once e week", "Daily"],
     },
     Property: "FrequnecyOfDiningOut",
   },

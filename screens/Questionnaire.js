@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Alert } from "react-native";
 import {
   View,
   Text,
@@ -11,43 +12,53 @@ import {
 } from "react-native";
 import { Colors } from "../components/styles";
 import SurveyDataRO from "../survey data/SurveyDataRO";
+import SurveyDataEN from "../survey data/SurveyDataEN";
 
-const Questionnaire = () => {
-  const allQuestions = SurveyDataRO;
+//Api client
+import axios from "axios";
+const postUserAPI =
+  "http://cm2020.unitbv.ro/Turism4/api/Utilizators/PostUtilizator";
+
+var answersJSON = {};
+var allQuestions = {};
+
+const Questionnaire = ({ navigation, route }) => {
+  const { loginType, language, email } = route.params;
+
+  if (language == "RO") {
+    allQuestions = SurveyDataRO;
+  } else {
+    allQuestions = SurveyDataEN;
+  }
+  addLanguageOptionToJSON(language);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [answer1RO, setAnswer1RO] = useState(null);
-  const [answer2RO, setAnswer2RO] = useState(null);
-  const [answer3RO, setAnswer3RO] = useState(null);
-  const [answer4RO, setAnswer4RO] = useState(null);
-  const [answer5RO, setAnswer5RO] = useState(null);
-  const [answer1EN, setAnswer1EN] = useState(null);
-  const [answer2EN, setAnswer2EN] = useState(null);
-  const [answer3EN, setAnswer3EN] = useState(null);
-  const [answer4EN, setAnswer4EN] = useState(null);
-  const [answer5EN, setAnswer5EN] = useState(null);
   const [currentOptionSelected, setCurrentOptionSelected] = useState("");
   const [showNextButton, setShowNextButton] = useState(false);
   const [showSubmitButton, setShowSubmitButton] = useState(false);
 
   const validateAnswer = (selectedOption) => {
-    console.log("first; funct param:" + selectedOption);
     setCurrentOptionSelected(selectedOption);
-    console.log(allQuestions.length - 1);
-
-    // if (currentQuestionIndex == allQuestions.length - 1) {
-    //   handleSubmit();
-    // } else {
-    // Show Next Button
-    setShowNextButton(true);
+    if (currentQuestionIndex != allQuestions.length - 1) {
+      setShowNextButton(true);
+    } else {
+      setShowSubmitButton(true);
+    }
   };
 
+  function addLanguageOptionToJSON(languageOption) {
+    answersJSON.Language = languageOption;
+  }
+
   const handleNext = () => {
+    let property = allQuestions[currentQuestionIndex].Property;
+    answersJSON[property] = currentOptionSelected;
+    console.log(answersJSON);
     if (currentQuestionIndex == allQuestions.length - 1) {
       // Last Question
       // Show Score Modal
       console.log("handle last question");
       setShowNextButton(false);
-      handleSubmit();
+      setShowSubmitButton(true);
     } else {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
       setCurrentOptionSelected(null);
@@ -61,9 +72,49 @@ const Questionnaire = () => {
   };
 
   const handleSubmit = () => {
-    setShowSubmitButton(true);
-    setShowNextButton(false);
+    let property = allQuestions[currentQuestionIndex].Property;
+    answersJSON[property] = currentOptionSelected;
+    //console.log("JSON after last question: ");
+    //console.log(answersJSON);
+
+    postNewUser(loginType, email);
+
     // TODO: API post
+  };
+
+  const postNewUser = async (loginType, email) => {
+    console.log("loginType: " + loginType);
+    //Todo add for facebook
+    if (loginType == "google") {
+      try {
+        const resp = await axios.post(postUserAPI, {
+          userLoginGoogle: email,
+          userLoginIOS: "",
+          userEmail: "",
+          userLoginFacebook: "",
+          ID_Utilizator: 1,
+          ProfilUtilizator: JSON.stringify(answersJSON),
+        });
+        console.log(resp.data.ID_Utilizator);
+        return Alert.alert(
+          "Cont creat cu succes!",
+          "Contul " +
+            "testFirstQuestionnaireUser" +
+            " a fost creat cu succes. Puteti sa va autentificati cand doriti.",
+          [
+            // The "Yes" button
+            {
+              text: "Ok",
+              onPress: () => {
+                navigation.navigate("Iesire din cont");
+              },
+            },
+          ]
+        );
+      } catch (err) {
+        console.log("Post new user: " + err);
+      }
+    }
   };
 
   const renderQuestion = () => {
@@ -160,7 +211,7 @@ const Questionnaire = () => {
     if (showSubmitButton) {
       return (
         <TouchableOpacity
-          onPress={handleNext}
+          onPress={handleSubmit}
           style={{
             marginTop: 20,
             width: "100%",

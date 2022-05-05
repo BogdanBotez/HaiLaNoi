@@ -43,11 +43,14 @@ export default dataRO = [
     Question: "Cât de des iei masa în oraș?",
     Answers: {
       value: [
-        "Nu obișnuiesc să iau masa în oraș",
+        "Niciodata",
         "O dată pe lună",
         "O dată pe săptămână",
+        "In fiecare zi",
       ],
     },
     Property: "FrequnecyOfDiningOut",
   },
 ];
+
+// "{\"Language\": \"Ro\", \"County\": \"Sălaj\", \"AgeGroup\": \"Sub 19 ani\", \"Motivation\": \"Vacanță\", \"NightsSpent\": 2}"

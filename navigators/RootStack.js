@@ -106,8 +106,10 @@ const RootStack = () => {
                 component={Review}
               />
               <Drawer.Screen
+                //makes drawer invisible
                 options={{
-                  headerTintColor: black,
+                  headerShown: false,
+                  swipeEdgeWidth: 0,
                   drawerItemStyle: {
                     display: "none",
                   },

@@ -1,5 +1,5 @@
 import { Rating } from "react-native-ratings";
-import { View, StyleSheet, TextInput, Alert, Image } from "react-native";
+import { View, StyleSheet, TextInput, Alert, Image, Text } from "react-native";
 import React, { useState, useContext, useEffect, Component } from "react";
 
 import {
@@ -62,20 +62,32 @@ const Review = ({ navigation, route }) => {
             Comentariu: textInput,
           }
         );
+        //post image pt id-ul review-ului returnat de response
         console.log(
-          "post review response: " +
-            resp.data.ID_Utilizator +
-            " " +
-            resp.data.Comentariu +
-            " " +
-            "ID_RatingUtilizatorEntity" +
-            resp.data.ID_RatingUtilizatorEntity
+          "id review in post mesaj" + resp.data.ID_RatingUtilizatorEntity
         );
+        postImage(resp.data.ID_RatingUtilizatorEntity);
       } catch (err) {
         console.log(err);
       }
 
       logPostBody();
+    }
+  };
+
+  const postImage = async (idRating) => {
+    console.log("id review in post poza: " + idRating);
+    try {
+      const resp = await axios.post(
+        "http://cm2020.unitbv.ro/Turism4/api/RatingUtilizatorEntities/PostFotografii",
+        {
+          ID_RatingUtilizatorEntity: parseInt(idRating),
+          Imagine: pickedImagePath,
+          ID_ENTITY: parseInt(locationID),
+        }
+      );
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -132,8 +144,8 @@ const Review = ({ navigation, route }) => {
     console.log(result);
 
     if (!result.cancelled) {
-      setPickedImagePath(result.uri);
-      console.log(result.uri);
+      setPickedImagePath(result.base64);
+      console.log(result.base64);
     }
   };
 
@@ -185,20 +197,21 @@ const Review = ({ navigation, route }) => {
       <StyledButton onPress={() => postReview()}>
         <ButtonText>Adauga Recenzie</ButtonText>
       </StyledButton>
+      <Line></Line>
+      <Text>
+        Pentru ca validarea sa fie completa, va rugam sa adaugati o poza cu
+        bonul.
+      </Text>
 
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
         <StyledButton onPress={() => openCamera()}>
           <ButtonText>Camera</ButtonText>
         </StyledButton>
-        <Text>
-          Pentru ca validarea sa fie completa, va rugam sa adaugati o poza cu
-          bonul.
-        </Text>
+
         <StyledButton onPress={() => openGallery()}>
           <ButtonText>Galerie</ButtonText>
         </StyledButton>
       </View>
-
       <View style={styles.imageContainer}>
         {pickedImagePath !== "" && (
           <Image source={{ uri: pickedImagePath }} style={styles.image} />
@@ -231,11 +244,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
   },
   imageContainer: {
-    padding: 30,
+    padding: 20,
+    alignItems: "center",
   },
   image: {
     width: 200,
-    height: 150,
+    height: 100,
     resizeMode: "contain",
   },
 });
