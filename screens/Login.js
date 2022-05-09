@@ -196,7 +196,7 @@ const Login = ({ navigation, route }) => {
 
   const showQuestionnaireDialog = (loginPlatform, email) => {
     return Alert.alert(
-      "Cont inexistent / Invalid account",
+      "Cont nou / New account", //Cont nou
       "Pentru crearea contului trebuie sa completati un formular. Selectati limba dorita./ Account registration requires completing a short questionnaire. Select the language.",
       [
         // The "Yes" button

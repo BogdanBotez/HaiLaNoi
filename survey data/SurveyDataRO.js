@@ -8,7 +8,7 @@ export default dataRO = [
   {
     Question: "În ce județ locuiești?",
     Answers: {
-      value: ["Brasov", "Timisoara", "alabala"],
+      value: ["Brasov", "Timisoara", "Constanta"],
     },
     Property: "County",
   },

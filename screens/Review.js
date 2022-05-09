@@ -128,38 +128,42 @@ const Review = ({ navigation, route }) => {
     ]);
   };
 
-  const openGallery = async () => {
-    // Ask the user for the permission to access the media library
-    const permissionResult =
-      await ImagePicker.requestMediaLibraryPermissionsAsync();
+  // const openGallery = async () => {
+  //   // Ask the user for the permission to access the media library
+  //   const permissionResult =
+  //     await ImagePicker.requestMediaLibraryPermissionsAsync();
 
-    if (permissionResult.granted === false) {
-      alert("You've refused to allow this appp to access your photos!");
-      return;
-    }
+  //   if (permissionResult.granted === false) {
+  //     alert("You've refused to allow this appp to access your photos!");
+  //     return;
+  //   }
 
-    let result = await ImagePicker.launchImageLibraryAsync();
+  //   let result = await ImagePicker.launchImageLibraryAsync();
 
-    // Explore the result
-    console.log(result);
+  //   // Explore the result
+  //   console.log(result);
 
-    if (!result.cancelled) {
-      setPickedImagePath(result.base64);
-      console.log(result.base64);
-    }
-  };
+  //   if (!result.cancelled) {
+  //     setPickedImagePath(result.base64);
+  //     console.log(result.base64);
+  //   }
+  // };
 
   const openCamera = async () => {
     // Ask the user for the permission to access the camera
     const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
 
     if (permissionResult.granted === false) {
-      alert("You've refused to allow this appp to access your camera!");
+      alert("You've refused to allow this app to access your camera!");
       return;
     }
 
     console.log("launchCameraAsync");
-    let result = await ImagePicker.launchCameraAsync();
+    let result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      quality: 1,
+      allowsEditing: true,
+    });
 
     console.log("Result: ");
     // Explore the result
@@ -203,15 +207,15 @@ const Review = ({ navigation, route }) => {
         bonul.
       </Text>
 
-      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-        <StyledButton onPress={() => openCamera()}>
-          <ButtonText>Camera</ButtonText>
-        </StyledButton>
+      {/* <View style={{ flexDirection: "row", justifyContent: "space-between" }}> */}
+      <StyledButton onPress={() => openCamera()}>
+        <ButtonText>Camera</ButtonText>
+      </StyledButton>
 
-        <StyledButton onPress={() => openGallery()}>
+      {/* <StyledButton onPress={() => openGallery()}>
           <ButtonText>Galerie</ButtonText>
-        </StyledButton>
-      </View>
+        </StyledButton> */}
+      {/* </View> */}
       <View style={styles.imageContainer}>
         {pickedImagePath !== "" && (
           <Image source={{ uri: pickedImagePath }} style={styles.image} />

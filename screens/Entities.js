@@ -1,6 +1,12 @@
 import React, { useState, useContext, useEffect } from "react";
 
-import { StyleSheet, View, FlatList, Text } from "react-native";
+import {
+  StyleSheet,
+  View,
+  FlatList,
+  Text,
+  TouchableOpacity,
+} from "react-native";
 import { ListItem } from "react-native-elements";
 
 import axios from "axios";
@@ -39,6 +45,13 @@ const Entities = ({ navigation, route }) => {
     }
   };
 
+  const pressHandler = (id, name) => {
+    navigation.navigate("EntityInformation", {
+      entityID: id,
+      entityName: name,
+    });
+  };
+
   return (
     <StyledContainer>
       <View style={styles.container}>
@@ -47,7 +60,14 @@ const Entities = ({ navigation, route }) => {
           data={entities}
           keyExtractor={(item, index) => index.toString()}
           renderItem={
-            ({ item }) => <Text style={styles.item}>{item.ENTITY_NAME}</Text>
+            ({ item }) => (
+              <TouchableOpacity
+                onPress={() => pressHandler(item.ID_ENTITY, item.ENTITY_NAME)}
+              >
+                <Text style={styles.item}>{item.ENTITY_NAME}</Text>
+              </TouchableOpacity>
+            )
+
             // return (
             //   <ListItem
             //     title={item.ENTITY_NAME}
