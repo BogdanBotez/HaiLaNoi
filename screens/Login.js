@@ -42,7 +42,9 @@ import KeyboardAvoidingWrapper from "../components/KeyboardAvoidingWrapper";
 //Api client
 import axios from "axios";
 
+//Social Network
 import * as Google from "expo-google-app-auth";
+import * as Facebook from "expo-facebook";
 
 //async-storage
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -55,12 +57,16 @@ const postUserAPI =
   "http://cm2020.unitbv.ro/Turism4/api/Utilizators/PostUtilizator";
 const getUserByGoogleAPI =
   "http://cm2020.unitbv.ro/Turism4/api/Utilizators/GetUtilizatorByGoogle";
+const getUserByFacebookAPI =
+  "http://cm2020.unitbv.ro/Turism4/api/Utilizators/GetUtilizatorByFacebook";
 
 //Todo
 const Login = ({ navigation, route }) => {
+  const [isLoggedIn, setLoggedinStatus] = useState(false);
   const [message, setMessage] = useState();
   const [messageType, setMessageType] = useState();
   const [googleSubmitting, setGoogleSubmitting] = useState(false);
+  const [facebookSubmitting, setFacebookSubmitting] = useState(false);
   const { storedCredentials, setStoredCredentials } =
     useContext(CredentialsContext);
   let currentUserId = null;
@@ -112,7 +118,7 @@ const Login = ({ navigation, route }) => {
         if (type == "success") {
           const { email, name } = user;
           //Daca user-ul este in Baza de date, se trece peste formular
-          let isEmailRegistered = await setUserRegistered(email, name);
+          let isEmailRegistered = await setUserRegisteredGoogle(email, name);
           console.log("isEmailRegistered: " + isEmailRegistered);
           if (isEmailRegistered) {
             persistLogin({ email, name, currentUserId }, message, "SUCCESS");
@@ -143,8 +149,9 @@ const Login = ({ navigation, route }) => {
   //Verific daca exista user-ul in baza de date
   //ToDo -- schimba functia intr-una generica
   // (adauga parametru de tip -- facebook/google/ios ca sa stii de unde vine)
-  const setUserRegistered = async (email, name) => {
+  const setUserRegisteredGoogle = async (email, name) => {
     console.log("2. isUserRegistered" + email);
+
     try {
       const resp = await axios.get(getUserByGoogleAPI, {
         params: { googleid: email },
@@ -161,6 +168,74 @@ const Login = ({ navigation, route }) => {
         console.log(name);
         // param dupa ce functioneaza si fb
         showQuestionnaireDialog("google", email);
+        //postNewUser(email, name);
+      } else {
+        console.log("4. SetEmailCreatedFalse: " + err);
+      }
+    }
+    return false;
+  };
+
+  async function handleFacebookSignIn() {
+    setFacebookSubmitting(true);
+    try {
+      await Facebook.initializeAsync({
+        appId: "948340382494053",
+      });
+      const { type, token, expirationDate, permissions, declinedPermissions } =
+        await Facebook.logInWithReadPermissionsAsync({
+          permissions: ["public_profile", "email"],
+        });
+      if (type === "success") {
+        // Get the user's name using Facebook's Graph API
+        const response = await fetch(
+          `https://graph.facebook.com/me?access_token=${token}&fields=name,email`
+        );
+        console.log("Facebook respo: ");
+
+        const { email, name } = await response.json();
+
+        let isEmailRegistered = await setUserRegisteredFacebook(email, name);
+        console.log("isEmailRegistered: " + isEmailRegistered);
+        if (isEmailRegistered) {
+          persistLogin({ email, name, currentUserId }, message, "SUCCESS");
+        } else {
+          console.log(
+            "6. Pentru a putea accesa contul va trebui sa completati un scurt formular."
+          );
+          setFacebookSubmitting(false);
+          //Todo
+          //useFormular();
+        }
+      } else {
+        // type === 'cancel'
+        setFacebookSubmitting(false);
+      }
+    } catch ({ message }) {
+      alert(`Facebook Login Error: ${message}`);
+      setFacebookSubmitting(false);
+    }
+  }
+
+  const setUserRegisteredFacebook = async (email, name) => {
+    console.log("2. isUserRegistered" + email);
+
+    try {
+      const resp = await axios.get(getUserByFacebookAPI, {
+        params: { facebookid: email },
+      });
+      setCurrentUserId(resp);
+      console.log(resp.status);
+      console.log("Current user id: " + currentUserId);
+      console.log("4. SetEmailCreatedTrue: ");
+      return true;
+    } catch (err) {
+      //Daca nu exista contul in db => formular + daca completeaza formularul se intoarce in Login screen
+      if (err.toString() == "Error: Request failed with status code 404") {
+        console.log("Cont inexistent in db");
+        console.log(name);
+        // param dupa ce functioneaza si fb
+        showQuestionnaireDialog("facebook", email);
         //postNewUser(email, name);
       } else {
         console.log("4. SetEmailCreatedFalse: " + err);
@@ -274,18 +349,18 @@ const Login = ({ navigation, route }) => {
               <ActivityIndicator size="large" color={primary} />
             </StyledButton>
           )}
-          {/* <StyledButton
-            facebook={true}
-            onPress={
-              () => {
-                navigation.navigate("Questionnaire");
-              }
-              //
-            }
-          >
-            <Fontisto name="facebook" color={"white"} size={25} />
-            <ButtonText> Login prin Facebook</ButtonText>
-          </StyledButton> */}
+
+          {!facebookSubmitting && (
+            <StyledButton facebook={true} onPress={handleFacebookSignIn}>
+              <Fontisto name="facebook" color={"white"} size={25} />
+              <ButtonText> Login prin Facebook</ButtonText>
+            </StyledButton>
+          )}
+          {facebookSubmitting && (
+            <StyledButton facebook={true} disabled={true}>
+              <ActivityIndicator size="large" color={primary} />
+            </StyledButton>
+          )}
         </InnerContainer>
       </StyledContainer>
     </KeyboardAvoidingWrapper>

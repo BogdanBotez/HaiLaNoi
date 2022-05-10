@@ -78,8 +78,6 @@ const Questionnaire = ({ navigation, route }) => {
     //console.log(answersJSON);
 
     postNewUser(loginType, email);
-
-    // TODO: API post
   };
 
   const postNewUser = async (loginType, email) => {
@@ -92,6 +90,35 @@ const Questionnaire = ({ navigation, route }) => {
           userLoginIOS: "",
           userEmail: "",
           userLoginFacebook: "",
+          ID_Utilizator: 1,
+          ProfilUtilizator: JSON.stringify(answersJSON),
+        });
+        console.log(resp.data.ID_Utilizator);
+        return Alert.alert(
+          "Cont creat cu succes!",
+          "Contul " +
+            "testFirstQuestionnaireUser" +
+            " a fost creat cu succes. Puteti sa va autentificati cand doriti.",
+          [
+            // The "Yes" button
+            {
+              text: "Ok",
+              onPress: () => {
+                navigation.navigate("Iesire din cont");
+              },
+            },
+          ]
+        );
+      } catch (err) {
+        console.log("Post new user: " + err);
+      }
+    } else if (loginType == "facebook") {
+      try {
+        const resp = await axios.post(postUserAPI, {
+          userLoginGoogle: "",
+          userLoginIOS: "",
+          userEmail: "",
+          userLoginFacebook: email,
           ID_Utilizator: 1,
           ProfilUtilizator: JSON.stringify(answersJSON),
         });
