@@ -181,7 +181,7 @@ const Review = ({ navigation, route }) => {
       <Rating
         minValue={1}
         showRating
-        defaultRating={3}
+        startingValue={5}
         onFinishRating={setEntityRating}
         style={{ paddingVertical: 10 }}
       />

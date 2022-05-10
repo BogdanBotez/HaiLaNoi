@@ -46,6 +46,7 @@ const Entities = ({ navigation, route }) => {
   };
 
   const pressHandler = (id, name) => {
+    console.log("id press handler: " + id);
     navigation.navigate("EntityInformation", {
       entityID: id,
       entityName: name,
