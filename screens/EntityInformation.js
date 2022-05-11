@@ -139,7 +139,7 @@ const EntityInformation = ({ navigation, route }) => {
   return (
     <StyledContainer>
       {/* <View style={styles.imageContainer}> */}
-      {/* <View style={styles.imageContainer}>
+      <View style={styles.imageContainer}>
         <Image
           source={{
             uri:
@@ -162,37 +162,24 @@ const EntityInformation = ({ navigation, route }) => {
         style={{ paddingVertical: 10 }}
       />
       <Line />
-      <Text alignItems="center">Recenzii utilizatori</Text> */}
+      <Text alignItems="center">Recenzii utilizatori</Text>
       <View>
         <FlatList
           itemSeparatorComponent={() => <View style={styles.separator} />}
           data={reviews}
           keyExtractor={(item, index) => index.toString()}
-          renderItem={
-            ({ item }) => (
-              <Text style={styles.item}>
-                Data: {getDateSubstring(item.DataOra.toString())}, Ora:{" "}
-                {getTimeSubstring(item.DataOra.toString())} ~{"\n"}Comentariu:{" "}
-                {item.Comentariu}{" "}
-              </Text>
-            )
-
-            // return (
-            //   <ListItem
-            //     title={item.ENTITY_NAME}
-            //     //title={"${item.ENTITY_NAME} (${item.RatingCurent})"}
-            //     // onPress={() => {}}
-            //   />
-            // );
-          }
+          renderItem={({ item }) => (
+            <Text style={styles.item}>
+              Data: {getDateSubstring(item.DataOra.toString())}, Ora:{" "}
+              {getTimeSubstring(item.DataOra.toString())} ~{"\n"}Comentariu:{" "}
+              {item.Comentariu}{" "}
+            </Text>
+          )}
         />
       </View>
     </StyledContainer>
   );
 };
-//Rating
-{
-}
 
 const styles = StyleSheet.create({
   // container: {

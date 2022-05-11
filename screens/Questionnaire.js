@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import { Alert } from "react-native";
+import React, { useEffect, useState, useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import { Alert, BackHandler } from "react-native";
 import {
   View,
   Text,
@@ -21,6 +22,10 @@ const postUserAPI =
 
 var answersJSON = {};
 var allQuestions = {};
+var messageBackHandler = null;
+var titleBackHandler = null;
+var positiveAnswerBackHandler = null;
+var negativeAnswerBackHandler = null;
 
 const Questionnaire = ({ navigation, route }) => {
   const { loginType, language, email } = route.params;
@@ -47,6 +52,70 @@ const Questionnaire = ({ navigation, route }) => {
 
   function addLanguageOptionToJSON(languageOption) {
     answersJSON.Language = languageOption;
+  }
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        return true;
+      };
+
+      BackHandler.addEventListener("hardwareBackPress", onBackPress);
+
+      return () =>
+        BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+    }, [route])
+  );
+
+  // useEffect(() => {
+
+  //   BackHandler.addEventListener("hardwareBackPress", false);
+  //   return () => {
+  //     BackHandler.removeEventListener(
+  //       "hardwareBackPress",
+  //       handleBackButtonClick
+  //     );
+  //   };
+  // }, []);
+
+  function handleBackButtonClick() {
+    {
+      if (language == "RO") {
+        titleBackHandler = "Atentie! Chestionarul nu a fost finalizat.";
+        messageBackHandler =
+          "Datele nu vor fi salvate. Doriti revenirea la pagina principala?";
+        positiveAnswerBackHandler = "Da";
+        negativeAnswerBackHandler = "Nu";
+      } else {
+        titleBackHandler = "Alert! The questionnaire has not been finalized.";
+        messageBackHandler =
+          "Your answers won't be saved. Do you want to return to the main page?";
+        positiveAnswerBackHandler = "Yes";
+        negativeAnswerBackHandler = "No";
+      }
+      return Alert.alert(
+        titleBackHandler, //Cont nou
+        messageBackHandler,
+        [
+          // The "Yes" button
+          {
+            text: positiveAnswerBackHandler,
+            onPress: () => {
+              navigation.navigate("Iesire din cont");
+              return false;
+            },
+          },
+          // The "No" button
+          // Does nothing but dismiss the dialog when tapped
+          {
+            text: negativeAnswerBackHandler,
+            onPress: () => {
+              return true;
+            },
+          },
+        ]
+      );
+    }
   }
 
   const handleNext = () => {
@@ -197,8 +266,8 @@ const Questionnaire = ({ navigation, route }) => {
                   : option != currentOptionSelected
                   ? Colors.primary
                   : Colors.primary,
-              borderWidth:
-                allQuestions[currentQuestionIndex]?.Answers.value.length,
+              borderWidth: 5,
+              // allQuestions[currentQuestionIndex]?.Answers.value.length,
               height: 40,
               borderRadius: 10,
               flexDirection: "row",

@@ -67,6 +67,7 @@ const RootStack = () => {
                   drawerItemStyle: {
                     display: "none",
                   },
+                  unmountOnBlur: true,
                 }}
                 name="Scanare"
                 component={Scanner}
