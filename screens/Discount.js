@@ -77,8 +77,9 @@ const Discount = ({ navigation, route }) => {
         <WelcomeContainer>
           <PageTitle welcome={true}>Felicitari!</PageTitle>
           <SubTitle welcome={true}>
-            {"In baza acestui mesaj poti primi un discount de 10% pentru urmatoarea locatie: " +
-              locationName}
+            In baza acestui mesaj poti primi un discount de 10% pentru
+            urmatoarea locatie:
+            {locationName}
           </SubTitle>
           <SubTitle welcome={true}>
             Pentru a beneficia de discount, arata-i acest mesaj unui ospatar.

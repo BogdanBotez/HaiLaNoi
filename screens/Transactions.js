@@ -99,11 +99,16 @@ const styles = StyleSheet.create({
     backgroundColor: "#CED0CE",
   },
   item: {
+    textAlign: "center",
     marginTop: 20,
-    padding: 20,
-    paddingHorizontal: 20,
-    backgroundColor: "#FFA500",
-    fontSize: 15,
+    padding: 10,
+    marginHorizontal: 0,
+    paddingHorizontal: 10,
+    backgroundColor: "#f4f0ec",
+    fontSize: 14,
+    borderRadius: 20,
+    borderColor: "#27270c",
+    borderWidth: 2,
   },
 });
 

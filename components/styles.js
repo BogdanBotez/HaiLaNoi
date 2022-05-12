@@ -23,7 +23,7 @@ export const Colors = {
   secondary: "#E5E7EB",
   tertiary: "#1F2937",
   darkLight: "#9CA3AF",
-  brand: "#FFA500",
+  brand: "#5e6287",
   green: "#10B981",
   red: "#EF4444",
   black: "#000000",

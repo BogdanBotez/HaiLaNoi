@@ -329,8 +329,9 @@ const Login = ({ navigation, route }) => {
       <StyledContainer>
         <StatusBar style="dark" />
         <InnerContainer>
-          <PageLogo
-            source={require("./../assets/img/logo.png")}
+          <Image
+            style={styles.imageContainer}
+            source={require("./../assets/img/hln_app_logo-try.png")}
             resizeMode="contain"
           />
           <PageTitle>HaiLaNoi</PageTitle>
@@ -378,4 +379,5 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  imageContainer: { width: "60%", resizeMode: "contain" },
 });

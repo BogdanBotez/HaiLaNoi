@@ -54,29 +54,6 @@ const Scanner = ({ navigation, route }) => {
       ]
     );
   };
-  // <View style={styles.container}>
-  //   <FlatList
-  //     itemSeparatorComponent={() => <View style={styles.separator} />}
-  //     data={transactions}
-  //     keyExtractor={(item, index) => index.toString()}
-  //     renderItem={
-  //       ({ item }) => (
-  //         <Text style={styles.item}>
-  //           Locatia: {item.ENTITY_NAME + ", "}
-  //           Data: {getDateSubstring(item.DataOra.toString())}, Ora:{" "}
-  //           {getTimeSubstring(item.DataOra.toString())}
-  //         </Text>
-  //       )
-  //       // return (
-  //       //   <ListItem
-  //       //     title={item.ENTITY_NAME}
-  //       //     //title={"${item.ENTITY_NAME} (${item.RatingCurent})"}
-  //       //     // onPress={() => {}}
-  //       //   />
-  //       // );
-  //     }
-  //   />
-  // </View>
 
   const verifyLocationRegistered = async (qrData) => {
     locationName = "";
