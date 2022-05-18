@@ -14,6 +14,7 @@ import {
 import { Colors } from "../components/styles";
 import SurveyDataRO from "../survey data/SurveyDataRO";
 import SurveyDataEN from "../survey data/SurveyDataEN";
+import DropDownPicker from "react-native-dropdown-picker";
 
 //Api client
 import axios from "axios";
@@ -40,6 +41,8 @@ const Questionnaire = ({ navigation, route }) => {
   const [currentOptionSelected, setCurrentOptionSelected] = useState("");
   const [showNextButton, setShowNextButton] = useState(false);
   const [showSubmitButton, setShowSubmitButton] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState(false);
+  const [value, setValue] = useState(null);
 
   const validateAnswer = (selectedOption) => {
     setCurrentOptionSelected(selectedOption);
@@ -253,35 +256,50 @@ const Questionnaire = ({ navigation, route }) => {
     );
   };
   const renderOptions = () => {
-    return (
-      <View>
-        {allQuestions[currentQuestionIndex]?.Answers.value.map((option) => (
-          <TouchableOpacity
-            onPress={() => validateAnswer(option)}
-            key={option}
-            style={{
-              backgroundColor:
-                option == currentOptionSelected
-                  ? Colors.brand
-                  : option != currentOptionSelected
-                  ? Colors.primary
-                  : Colors.primary,
-              borderWidth: 5,
-              // allQuestions[currentQuestionIndex]?.Answers.value.length,
-              height: 40,
-              borderRadius: 10,
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-              paddingHorizontal: 20,
-              marginVertical: 10,
-            }}
-          >
-            <Text style={{ fontSize: 20 }}>{option}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
-    );
+    if (currentQuestionIndex === 0) {
+      return (
+        <DropDownPicker
+          open={openDropdown}
+          value={value}
+          items={allQuestions[currentQuestionIndex]?.Answers.value}
+          setOpen={setOpenDropdown}
+          setValue={setValue}
+          onSelectItem={(item) => {
+            validateAnswer(item.value);
+          }}
+        />
+      );
+    } else {
+      return (
+        <View>
+          {allQuestions[currentQuestionIndex]?.Answers.value.map((option) => (
+            <TouchableOpacity
+              onPress={() => validateAnswer(option)}
+              key={option}
+              style={{
+                backgroundColor:
+                  option == currentOptionSelected
+                    ? Colors.brand
+                    : option != currentOptionSelected
+                    ? Colors.primary
+                    : Colors.primary,
+                borderWidth: 1,
+                // allQuestions[currentQuestionIndex]?.Answers.value.length,
+                height: 40,
+                borderRadius: 10,
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                paddingHorizontal: 20,
+                marginVertical: 10,
+              }}
+            >
+              <Text style={{ fontSize: 20 }}>{option}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      );
+    }
   };
   const renderNextButton = () => {
     if (showNextButton) {
