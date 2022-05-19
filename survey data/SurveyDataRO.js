@@ -7,6 +7,7 @@ export default dataRO = [
   // },
   {
     Question: "În ce județ locuiești?",
+    Type: "dropdown",
     Answers: {
       value: [
         { label: "Bucuresti", value: "Bucuresti" },
@@ -57,6 +58,7 @@ export default dataRO = [
   },
   {
     Question: "Care este vârsta ta?",
+    Type: "simple",
     Answers: {
       value: [
         "Sub 19 ani",
@@ -70,6 +72,7 @@ export default dataRO = [
   },
   {
     Question: "Care este scopul vizitei tale în Brașov?",
+    Type: "simple",
     Answers: {
       value: ["Afaceri", "Vacanță", "Altceva"],
     },
@@ -77,6 +80,7 @@ export default dataRO = [
   },
   {
     Question: "Câte nopți petreci în Brașov?",
+    Type: "simple",
     Answers: {
       value: ["0", "1", "2", "3", "4", "5"],
     },
@@ -84,6 +88,7 @@ export default dataRO = [
   },
   {
     Question: "Cât de des iei masa în oraș?",
+    Type: "simple",
     Answers: {
       value: [
         "Niciodata",

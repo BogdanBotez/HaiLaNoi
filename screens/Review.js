@@ -72,6 +72,7 @@ const Review = ({ navigation, route }) => {
       }
 
       logPostBody();
+      redirectHome();
     }
   };
 
@@ -89,6 +90,11 @@ const Review = ({ navigation, route }) => {
     } catch (err) {
       console.log(err);
     }
+  };
+
+  const redirectHome = () => {
+    Alert.alert("Recenzia a fost adaugata cu succes.");
+    navigation.navigate("Istoric utilizator");
   };
 
   function convertUTCDateToLocalDate(date) {

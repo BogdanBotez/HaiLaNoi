@@ -1,6 +1,7 @@
 export default dataEN = [
   {
     Question: "Which is your country of origin?",
+    Type: "dropdown",
     Answers: {
       value: [
         { label: "Afghanistan", value: "Afghanistan" },
@@ -208,6 +209,7 @@ export default dataEN = [
   },
   {
     Question: "What is your age?",
+    Type: "simple",
     Answers: {
       value: [
         "Under 19 years old",
@@ -222,6 +224,7 @@ export default dataEN = [
 
   {
     Question: "What is the purpose of your visit in Brașov?",
+    Type: "simple",
     Answers: {
       value: ["Business", "Vacation", "Other"],
     },
@@ -229,6 +232,7 @@ export default dataEN = [
   },
   {
     Question: "How many nights will you stay in Brașov?",
+    Type: "simple",
     Answers: {
       value: ["0", "1", "2", "3", "4", "5"],
     },
@@ -236,6 +240,7 @@ export default dataEN = [
   },
   {
     Question: "How often do you dine out?",
+    Type: "simple",
     Answers: {
       value: ["Never", "Once a month", "Once e week", "Daily"],
     },

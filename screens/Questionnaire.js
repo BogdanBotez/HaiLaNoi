@@ -256,7 +256,7 @@ const Questionnaire = ({ navigation, route }) => {
     );
   };
   const renderOptions = () => {
-    if (currentQuestionIndex === 0) {
+    if (allQuestions[currentQuestionIndex]?.Type == "dropdown") {
       return (
         <DropDownPicker
           open={openDropdown}
