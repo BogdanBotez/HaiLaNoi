@@ -14,6 +14,7 @@ import {
   ActivityIndicator,
   Alert,
   TouchableOpacity,
+  setState,
 } from "react-native";
 
 import axios from "axios";
@@ -45,12 +46,14 @@ const Transactions = ({ navigation, route }) => {
   const { storedCredentials, setStoredCredentials } =
     useContext(CredentialsContext);
   const { name, email, currentUserId } = storedCredentials;
+  const TRANSACTIONS = useRef(null);
+  const REVIEWS = useRef(null);
 
   const firstRenderRef = useRef(false);
 
   useEffect(() => {
     getAllTransactionsByUserID();
-  }); // am incercat si cu [transactions] dar intra (cum e de asteptat)  in loop infinit
+  });
 
   const getAllTransactionsByUserID = async () => {
     try {
@@ -72,7 +75,10 @@ const Transactions = ({ navigation, route }) => {
           NrInregDeReturnat: transactions.length,
         },
       });
-      setReviewsNumberByEntity(resp.data.length);
+      REVIEWS.current = resp.data.length;
+      console.log(
+        "Numar de review-uri pentru entitatea selectata: " + resp.data.length
+      );
     } catch (err) {
       console.log(err);
     }
@@ -87,7 +93,11 @@ const Transactions = ({ navigation, route }) => {
           nrTranzactii: transactions.length,
         },
       });
-      setTransactionsNumberByEntity(resp.data.length);
+
+      TRANSACTIONS.current = resp.data.length;
+      // console.log("Transactions" + TRANSACTIONS.current);
+      // setTransactionsNumberByEntity(resp.data.length);
+      // console.log("Numar de tranzactii: " + resp.data.length);
     } catch (err) {
       console.log(err);
     }
@@ -103,14 +113,20 @@ const Transactions = ({ navigation, route }) => {
     return date;
   };
 
-  const pressHandler = (entityName, entityID) => {
-    setNumberOfReviewsByUserForEntity(entityID);
-    setNumberOfTransactionsByUserForEntity(entityID);
+  const pressHandler = async (entityName, entityID) => {
+    await setNumberOfReviewsByUserForEntity(entityID);
+    await setNumberOfTransactionsByUserForEntity(entityID);
 
-    if (transactionsNumberByEntity > reviewsNumberByEntity) {
+    if (TRANSACTIONS.current > REVIEWS.current) {
       showAlert(true, entityName, entityID);
+      console.log("Show alert true");
+      console.log("transact:" + TRANSACTIONS.current);
+      console.log("reviews:" + REVIEWS.current);
     } else {
       showAlert(false, entityName, entityID);
+      console.log("Show alert FALSE");
+      console.log("transact:" + TRANSACTIONS.current);
+      console.log("reviews:" + REVIEWS.current);
     }
   };
 
@@ -119,10 +135,12 @@ const Transactions = ({ navigation, route }) => {
     var message = "";
     var title = "";
     if (isReviewable) {
-      message = "Doresti sa adaugi o recenzie pentru ${entityName} ?";
+      message =
+        "Doresti sa adaugi o recenzie pentru locatia: " + entityName + "?";
       title = "Eligibil pentru recenzie.";
     } else {
-      message = "Doresti mai multe informatii despre ${entityName} ?";
+      message =
+        "Doresti mai multe informatii despre locatia: " + entityName + "?";
       title = "Recenzie adaugata in trecut.";
     }
 
