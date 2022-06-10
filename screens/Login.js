@@ -62,7 +62,6 @@ const getUserByFacebookAPI =
 
 //Todo
 const Login = ({ navigation, route }) => {
-  const [isLoggedIn, setLoggedinStatus] = useState(false);
   const [message, setMessage] = useState();
   const [messageType, setMessageType] = useState();
   const [googleSubmitting, setGoogleSubmitting] = useState(false);
@@ -110,25 +109,18 @@ const Login = ({ navigation, route }) => {
         "996685081623-fh0qs1n2h7r4c1hfec55pvik8o0gmbq3.apps.googleusercontent.com",
       scopes: ["profile", "email"],
     };
-
     Google.logInAsync(config)
       .then(async (result) => {
         const { type, user } = result;
-        console.log("1. Result api call HandleGoogleSignIN : " + type);
         if (type == "success") {
           const { email, name } = user;
           //Daca user-ul este in Baza de date, se trece peste formular
-          let isEmailRegistered = await setUserRegisteredGoogle(email, name);
+          let isEmailRegistered = await isUserRegisteredGoogle(email, name);
           console.log("isEmailRegistered: " + isEmailRegistered);
           if (isEmailRegistered) {
             persistLogin({ email, name, currentUserId }, message, "SUCCESS");
           } else {
-            console.log(
-              "6. Pentru a putea accesa contul va trebui sa completati un scurt formular."
-            );
             setGoogleSubmitting(false);
-            //Todo
-            //useFormular();
           }
         } else {
           handleMessage(
@@ -149,7 +141,8 @@ const Login = ({ navigation, route }) => {
   //Verific daca exista user-ul in baza de date
   //ToDo -- schimba functia intr-una generica
   // (adauga parametru de tip -- facebook/google/ios ca sa stii de unde vine)
-  const setUserRegisteredGoogle = async (email, name) => {
+
+  const isUserRegisteredGoogle = async (email, name) => {
     console.log("2. isUserRegistered" + email);
 
     try {
@@ -157,20 +150,10 @@ const Login = ({ navigation, route }) => {
         params: { googleid: email },
       });
       setCurrentUserId(resp);
-      console.log(resp.status);
-      console.log("Current user id: " + currentUserId);
-      console.log("4. SetEmailCreatedTrue: ");
       return true;
     } catch (err) {
-      //Daca nu exista contul in db => formular + daca completeaza formularul se intoarce in Login screen
       if (err.toString() == "Error: Request failed with status code 404") {
-        console.log("Cont inexistent in db");
-        console.log(name);
-        // param dupa ce functioneaza si fb
         showQuestionnaireDialog("google", email);
-        //postNewUser(email, name);
-      } else {
-        console.log("4. SetEmailCreatedFalse: " + err);
       }
     }
     return false;
@@ -187,25 +170,17 @@ const Login = ({ navigation, route }) => {
           permissions: ["public_profile", "email"],
         });
       if (type === "success") {
-        // Get the user's name using Facebook's Graph API
         const response = await fetch(
           `https://graph.facebook.com/me?access_token=${token}&fields=name,email`
         );
-        console.log("Facebook respo: ");
 
         const { email, name } = await response.json();
 
-        let isEmailRegistered = await setUserRegisteredFacebook(email, name);
-        console.log("isEmailRegistered: " + isEmailRegistered);
+        let isEmailRegistered = await isUserRegisteredFacebook(email, name);
         if (isEmailRegistered) {
           persistLogin({ email, name, currentUserId }, message, "SUCCESS");
         } else {
-          console.log(
-            "6. Pentru a putea accesa contul va trebui sa completati un scurt formular."
-          );
           setFacebookSubmitting(false);
-          //Todo
-          //useFormular();
         }
       } else {
         // type === 'cancel'
@@ -217,64 +192,52 @@ const Login = ({ navigation, route }) => {
     }
   }
 
-  const setUserRegisteredFacebook = async (email, name) => {
-    console.log("2. isUserRegistered" + email);
-
+  const isUserRegisteredFacebook = async (email, name) => {
     try {
       const resp = await axios.get(getUserByFacebookAPI, {
         params: { facebookid: email },
       });
       setCurrentUserId(resp);
-      console.log(resp.status);
-      console.log("Current user id: " + currentUserId);
-      console.log("4. SetEmailCreatedTrue: ");
       return true;
     } catch (err) {
       //Daca nu exista contul in db => formular + daca completeaza formularul se intoarce in Login screen
       if (err.toString() == "Error: Request failed with status code 404") {
-        console.log("Cont inexistent in db");
-        console.log(name);
-        // param dupa ce functioneaza si fb
         showQuestionnaireDialog("facebook", email);
-        //postNewUser(email, name);
-      } else {
-        console.log("4. SetEmailCreatedFalse: " + err);
       }
     }
     return false;
   };
 
-  const postNewUser = async (email, name) => {
-    try {
-      const resp = await axios.post(postUserAPI, {
-        userLoginGoogle: email,
-        userLoginIOS: "",
-        userEmail: "",
-        userLoginFacebook: "",
-        ID_Utilizator: 1,
-        ProfilUtilizator: "",
-      });
-      console.log(resp.data.ID_Utilizator);
-      setCurrentUserId(resp);
-      console.log(currentUserId);
-      console.log(
-        "New user id: " +
-          resp.data.ID_Utilizator.toString() +
-          "CurrentuserID" +
-          currentUserId
-      );
-      persistLogin({ email, name, currentUserId }, message, "SUCCESS");
-    } catch (err) {
-      console.log("Post new user: " + err);
-    }
-  };
+  // const postNewUser = async (email, name) => {
+  //   try {
+  //     const resp = await axios.post(postUserAPI, {
+  //       userLoginGoogle: email,
+  //       userLoginIOS: "",
+  //       userEmail: "",
+  //       userLoginFacebook: "",
+  //       ID_Utilizator: 1,
+  //       ProfilUtilizator: "",
+  //     });
+  //     console.log(resp.data.ID_Utilizator);
+  //     setCurrentUserId(resp);
+  //     console.log(currentUserId);
+  //     console.log(
+  //       "New user id: " +
+  //         resp.data.ID_Utilizator.toString() +
+  //         "CurrentuserID" +
+  //         currentUserId
+  //     );
+  //     persistLogin({ email, name, currentUserId }, message, "SUCCESS");
+  //   } catch (err) {
+  //     console.log("Post new user: " + err);
+  //   }
+  // };
 
   const showQuestionnaireDialog = (loginPlatform, email) => {
     return Alert.alert(
       "Cont nou / New account", //Cont nou
       "Pentru crearea contului trebuie sa completati un formular. Selectati limba dorita./ Account registration requires completing a short questionnaire. Select the language.",
       [
-        // The "Yes" button
         {
           text: "RO",
           onPress: () => {
@@ -285,8 +248,6 @@ const Login = ({ navigation, route }) => {
             });
           },
         },
-        // The "No" button
-        // Does nothing but dismiss the dialog when tapped
         {
           text: "EN",
           onPress: () => {

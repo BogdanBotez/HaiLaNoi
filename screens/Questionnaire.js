@@ -126,9 +126,6 @@ const Questionnaire = ({ navigation, route }) => {
     answersJSON[property] = currentOptionSelected;
     console.log(answersJSON);
     if (currentQuestionIndex == allQuestions.length - 1) {
-      // Last Question
-      // Show Score Modal
-      console.log("handle last question");
       setShowNextButton(false);
       setShowSubmitButton(true);
     } else {
@@ -168,9 +165,9 @@ const Questionnaire = ({ navigation, route }) => {
         console.log(resp.data.ID_Utilizator);
         return Alert.alert(
           "Cont creat cu succes!",
-          "Contul " +
-            "testFirstQuestionnaireUser" +
-            " a fost creat cu succes. Puteti sa va autentificati cand doriti.",
+          "Pentru email-ul " +
+            email +
+            "contul a fost creat cu succes. Puteti sa va autentificati cand doriti.",
           [
             // The "Yes" button
             {
