@@ -1,3 +1,3 @@
 # HaiLaNoi
 
-Codul este pe branch-ul master.
+Aplicatie react native pentru turism comunitar.
